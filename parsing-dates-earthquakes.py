@@ -1,11 +1,11 @@
 # ---
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py
+#     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
-#       format_name: light
-#       format_version: '1.5'
+#       format_name: percent
+#       format_version: '1.3'
 #       jupytext_version: 1.16.1
 #   kernelspec:
 #     display_name: Python 3
@@ -13,37 +13,37 @@
 #     name: python3
 # ---
 
-# + [markdown] id="OtLtvKtc3jJI"
+# %% [markdown] id="OtLtvKtc3jJI"
 # # **Significant Earthquakes, 1965-2016**
 #
 # Date, time, and location of all earthquakes with magnitude of 5.5 or higher
 
-# + [markdown] id="EOD4edXg4SU6"
+# %% [markdown] id="EOD4edXg4SU6"
 # ## **About the Dataset**
 #
 # This dataset includes a record of the date, time, location, depth, magnitude, and source of every earthquake with a reported magnitude 5.5 or higher since 1965.
 
-# + colab={"base_uri": "https://localhost:8080/"} id="MHfbGrvIzTnB" executionInfo={"status": "ok", "timestamp": 1708967634074, "user_tz": -330, "elapsed": 3290, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="dcfc402a-6806-4749-8194-e4190bab2563"
+# %% id="MHfbGrvIzTnB"
 from google.colab import drive, userdata
 drive.mount('/content/drive')
 
-# + colab={"base_uri": "https://localhost:8080/"} id="hNqXd6QtI5Aj" executionInfo={"status": "ok", "timestamp": 1708967634075, "user_tz": -330, "elapsed": 5, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="1de66df3-9d71-46c6-91ac-bde4a15590c6"
+# %% id="hNqXd6QtI5Aj"
 # %cd /content/drive/MyDrive/Colab Notebooks/Parsing Dates Kaggle Earthquakes/parsing-dates-earthquakes
 
-# + colab={"base_uri": "https://localhost:8080/"} id="AvNClLgxJyxK" executionInfo={"status": "ok", "timestamp": 1708967637055, "user_tz": -330, "elapsed": 2984, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="55a3b39e-3d75-4ecf-f69c-c0f5940dad51"
+# %% id="AvNClLgxJyxK"
 # !jupyter nbconvert --to html parsing-dates-earthquakes.ipynb
 
-# + colab={"base_uri": "https://localhost:8080/"} id="mf5BAoeKRh8J" executionInfo={"status": "ok", "timestamp": 1708967645389, "user_tz": -330, "elapsed": 8344, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="12196dcf-4c4a-446b-e22f-e0651abfc4cd"
+# %% id="mf5BAoeKRh8J"
 # !pip install jupytext
 
-# + colab={"base_uri": "https://localhost:8080/"} id="7TtpunZoQHjJ" executionInfo={"status": "ok", "timestamp": 1708967646964, "user_tz": -330, "elapsed": 1584, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="69cc6904-0a41-4088-c072-1c22ccba1314"
-# !jupytext --set-formats ipynb,py parsing-dates-earthquakes.ipynb
+# %% id="7TtpunZoQHjJ"
+# !jupytext --set-formats ipynb,py:percent parsing-dates-earthquakes.ipynb
 # !jupytext --sync parsing-dates-earthquakes.ipynb
 
-# + [markdown] id="Tg0AkV05Ag97"
+# %% [markdown] id="Tg0AkV05Ag97"
 # ## Import the libraries
 
-# + id="k1nkxxdx5szD" executionInfo={"status": "ok", "timestamp": 1708967646964, "user_tz": -330, "elapsed": 4, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}}
+# %% id="k1nkxxdx5szD"
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -51,12 +51,12 @@ import seaborn as sns
 import datetime
 import os
 
-# + id="uCbTWRgt6hoC" executionInfo={"status": "ok", "timestamp": 1708967646964, "user_tz": -330, "elapsed": 3, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}}
+# %% id="uCbTWRgt6hoC"
 # Setting the environment variables
 # os.environ['KAGGLE_KEY'] = userdata.get('KAGGLE_KEY')
 # os.environ['KAGGLE_USERNAME'] = userdata.get('KAGGLE_USERNAME')
 
-# + id="LhceXfwv7a8K" executionInfo={"status": "ok", "timestamp": 1708967646964, "user_tz": -330, "elapsed": 3, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}}
+# %% id="LhceXfwv7a8K"
 # Download dataset from Kaggle
 # # !mkdir data
 # # !pip install kaggle
@@ -64,44 +64,44 @@ import os
 # # !unzip earthquake-database.zip -d data/
 # # !rm earthquake-database.zip
 
-# + id="Heg5hACcAg97" executionInfo={"status": "ok", "timestamp": 1708967647825, "user_tz": -330, "elapsed": 863, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}}
+# %% id="Heg5hACcAg97"
 # read the data
 earthquakes = pd.read_csv("./data/database.csv")
 
 # set seed for reproducibility
 np.random.seed(0)
 
-# + [markdown] id="YiS0d5B4Ag98"
+# %% [markdown] id="YiS0d5B4Ag98"
 # ## Check the data type of our date column
 #
 
-# + colab={"base_uri": "https://localhost:8080/"} id="mP_uMQp0Ag98" executionInfo={"status": "ok", "timestamp": 1708967647826, "user_tz": -330, "elapsed": 12, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="9bf1010c-00e7-4799-b812-44200df07baa"
+# %% id="mP_uMQp0Ag98"
 earthquakes['Date'].dtype
 
-# + [markdown] id="fXVS2xMwAg99"
+# %% [markdown] id="fXVS2xMwAg99"
 # ## Convert our date columns to datetime
 #
 # Some entries follow a different datetime format compared to rest.
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 307} id="52EsWCNiAg99" executionInfo={"status": "ok", "timestamp": 1708967647826, "user_tz": -330, "elapsed": 11, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="838ea19d-8718-4376-ae67-105586b157a2"
+# %% id="52EsWCNiAg99"
 earthquakes[3378:3383]
 
-# + [markdown] id="-ypkleDsAg99"
+# %% [markdown] id="-ypkleDsAg99"
 # This does appear to be an issue with data entry: ideally, all entries in the column have the same format.  We can get an idea of how widespread this issue is by checking the length of each entry in the "Date" column.
 
-# + colab={"base_uri": "https://localhost:8080/"} id="EWUfoe3_Ag99" executionInfo={"status": "ok", "timestamp": 1708967647826, "user_tz": -330, "elapsed": 9, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="232a7f17-a8c1-4eb9-8f9d-6eb3b44c2a58"
+# %% id="EWUfoe3_Ag99"
 date_lengths = earthquakes.Date.str.len()
 date_lengths.value_counts()
 
-# + [markdown] id="kgEjtsjIAg9-"
+# %% [markdown] id="kgEjtsjIAg9-"
 # Looks like there are two more rows that has a date in a different format.
 
-# + colab={"base_uri": "https://localhost:8080/", "height": 297} id="QKsq20j4Ag9-" executionInfo={"status": "ok", "timestamp": 1708967647826, "user_tz": -330, "elapsed": 8, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="e6354fd1-b169-4b99-eba5-5e53d5174c93"
+# %% id="QKsq20j4Ag9-"
 indices = np.where([date_lengths == 24])[1]
 print('Indices with corrupted data:', indices)
 earthquakes.loc[indices]
 
-# + colab={"base_uri": "https://localhost:8080/"} id="LjkItKJJAg9-" executionInfo={"status": "ok", "timestamp": 1708967647826, "user_tz": -330, "elapsed": 7, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="832c1a16-78b5-4cf6-a1a3-3842c78ebd37"
+# %% id="LjkItKJJAg9-"
 from datetime import date,datetime
 import pandas as pd
 from pandas.api.types import is_datetime64_any_dtype,is_object_dtype
@@ -307,24 +307,24 @@ def parse_dates(date_obj_col: pd.core.series, dateonly: bool, date_format: str, 
 earthquakes.loc[:,'date_parsed'] = parse_dates(date_obj_col=earthquakes.loc[:,'Date'],dateonly=True,date_format='%m%d%Y')
 
 
-# + colab={"base_uri": "https://localhost:8080/"} id="nOy4LOC7Ag9-" executionInfo={"status": "ok", "timestamp": 1708967647826, "user_tz": -330, "elapsed": 6, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="2e1637ff-a360-435e-f62c-e286974d646c"
+# %% id="nOy4LOC7Ag9-"
 earthquakes['date_parsed'].head()
 
-# + [markdown] id="mSHz4j-KAg9_"
+# %% [markdown] id="mSHz4j-KAg9_"
 # ## Select the day of the month
 #
 # Create a Pandas Series `day_of_month_earthquakes` containing the day of the month from the "date_parsed" column.
 
-# + id="sIkO2My8Ag9_" executionInfo={"status": "ok", "timestamp": 1708967647826, "user_tz": -330, "elapsed": 5, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}}
+# %% id="sIkO2My8Ag9_"
 # try to get the day of the month from the date column
 day_of_month_earthquakes = earthquakes.loc[:,'date_parsed'].dt.day
 
-# + [markdown] id="NyxL00fsAg9_"
+# %% [markdown] id="NyxL00fsAg9_"
 # ## Plot the day of the month to check the date parsing
 #
 # Plot the days of the month from earthquake dataset.
 
-# + id="mAM-VNGUAg9_" colab={"base_uri": "https://localhost:8080/", "height": 472} executionInfo={"status": "ok", "timestamp": 1708967648684, "user_tz": -330, "elapsed": 863, "user": {"displayName": "Kiran S", "userId": "14416592016092004339"}} outputId="a94d05f5-1f69-402f-c678-24fe880f9b0b"
+# %% id="mAM-VNGUAg9_"
 # Plot a distplot to visualize the distribution of earthquakes on different days of the month from year 1965-2016
 sns.histplot(day_of_month_earthquakes,kde=True)
 plt.xlabel('Days of the Month')
@@ -333,10 +333,9 @@ plt.show()
 
 
 
-# + [markdown] id="iTiuHrnczulJ"
+# %% [markdown] id="iTiuHrnczulJ"
 # ### **Conclusion**
 #
 # **The graph shows a relatively even distribution of earthquakes across the days of the month,which is what we would expect.**
 
-# + id="trpPhztEbDgD"
-
+# %% id="trpPhztEbDgD"
