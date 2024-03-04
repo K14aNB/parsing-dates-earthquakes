@@ -1,6 +1,7 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_filter: -all
 #     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
@@ -9,41 +10,47 @@
 #       jupytext_version: 1.16.1
 #   kernelspec:
 #     display_name: Python 3
-#     language: python
 #     name: python3
 # ---
 
-# %% [markdown] id="OtLtvKtc3jJI"
+# %% [markdown]
 # # **Significant Earthquakes, 1965-2016**
 #
 # Date, time, and location of all earthquakes with magnitude of 5.5 or higher
 
-# %% [markdown] id="EOD4edXg4SU6"
+# %% [markdown]
 # ## **About the Dataset**
 #
 # This dataset includes a record of the date, time, location, depth, magnitude, and source of every earthquake with a reported magnitude 5.5 or higher since 1965.
 
-# %% id="MHfbGrvIzTnB"
-from google.colab import drive, userdata
-drive.mount('/content/drive')
+# %%
+from google.colab import userdata
 
-# %% id="hNqXd6QtI5Aj"
+# %%
+# %%capture
 # %cd /content/drive/MyDrive/Colab Notebooks/Parsing Dates Kaggle Earthquakes/parsing-dates-earthquakes
 
-# %% id="AvNClLgxJyxK"
+# %%
+# Save HTML preview of notebook
+# %%capture
 # !jupyter nbconvert --to html parsing-dates-earthquakes.ipynb
 
-# %% id="mf5BAoeKRh8J"
-# !pip install jupytext
+# %%
+# !pip install --quiet jupytext
 
-# %% id="7TtpunZoQHjJ"
-# !jupytext --set-formats ipynb,py:percent parsing-dates-earthquakes.ipynb
-# !jupytext --sync parsing-dates-earthquakes.ipynb
+# %%
+# Save py:percent script of notebook
+# %%capture
+# !jupytext --to py:percent parsing-dates-earthquakes.ipynb
 
-# %% [markdown] id="Tg0AkV05Ag97"
+# %%
+# %%capture
+# !jupytext --opt cell_metadata_filter=-all parsing-dates-earthquakes.py
+
+# %% [markdown]
 # ## Import the libraries
 
-# %% id="k1nkxxdx5szD"
+# %%
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -51,12 +58,12 @@ import seaborn as sns
 import datetime
 import os
 
-# %% id="uCbTWRgt6hoC"
+# %%
 # Setting the environment variables
 # os.environ['KAGGLE_KEY'] = userdata.get('KAGGLE_KEY')
 # os.environ['KAGGLE_USERNAME'] = userdata.get('KAGGLE_USERNAME')
 
-# %% id="LhceXfwv7a8K"
+# %%
 # Download dataset from Kaggle
 # # !mkdir data
 # # !pip install kaggle
@@ -64,44 +71,44 @@ import os
 # # !unzip earthquake-database.zip -d data/
 # # !rm earthquake-database.zip
 
-# %% id="Heg5hACcAg97"
+# %%
 # read the data
 earthquakes = pd.read_csv("./data/database.csv")
 
 # set seed for reproducibility
 np.random.seed(0)
 
-# %% [markdown] id="YiS0d5B4Ag98"
+# %% [markdown]
 # ## Check the data type of our date column
 #
 
-# %% id="mP_uMQp0Ag98"
+# %%
 earthquakes['Date'].dtype
 
-# %% [markdown] id="fXVS2xMwAg99"
+# %% [markdown]
 # ## Convert our date columns to datetime
 #
 # Some entries follow a different datetime format compared to rest.
 
-# %% id="52EsWCNiAg99"
+# %%
 earthquakes[3378:3383]
 
-# %% [markdown] id="-ypkleDsAg99"
+# %% [markdown]
 # This does appear to be an issue with data entry: ideally, all entries in the column have the same format.  We can get an idea of how widespread this issue is by checking the length of each entry in the "Date" column.
 
-# %% id="EWUfoe3_Ag99"
+# %%
 date_lengths = earthquakes.Date.str.len()
 date_lengths.value_counts()
 
-# %% [markdown] id="kgEjtsjIAg9-"
+# %% [markdown]
 # Looks like there are two more rows that has a date in a different format.
 
-# %% id="QKsq20j4Ag9-"
+# %%
 indices = np.where([date_lengths == 24])[1]
 print('Indices with corrupted data:', indices)
 earthquakes.loc[indices]
 
-# %% id="LjkItKJJAg9-"
+# %%
 from datetime import date,datetime
 import pandas as pd
 from pandas.api.types import is_datetime64_any_dtype,is_object_dtype
@@ -307,24 +314,24 @@ def parse_dates(date_obj_col: pd.core.series, dateonly: bool, date_format: str, 
 earthquakes.loc[:,'date_parsed'] = parse_dates(date_obj_col=earthquakes.loc[:,'Date'],dateonly=True,date_format='%m%d%Y')
 
 
-# %% id="nOy4LOC7Ag9-"
+# %%
 earthquakes['date_parsed'].head()
 
-# %% [markdown] id="mSHz4j-KAg9_"
+# %% [markdown]
 # ## Select the day of the month
 #
 # Create a Pandas Series `day_of_month_earthquakes` containing the day of the month from the "date_parsed" column.
 
-# %% id="sIkO2My8Ag9_"
+# %%
 # try to get the day of the month from the date column
 day_of_month_earthquakes = earthquakes.loc[:,'date_parsed'].dt.day
 
-# %% [markdown] id="NyxL00fsAg9_"
+# %% [markdown]
 # ## Plot the day of the month to check the date parsing
 #
 # Plot the days of the month from earthquake dataset.
 
-# %% id="mAM-VNGUAg9_"
+# %%
 # Plot a distplot to visualize the distribution of earthquakes on different days of the month from year 1965-2016
 sns.histplot(day_of_month_earthquakes,kde=True)
 plt.xlabel('Days of the Month')
@@ -333,9 +340,9 @@ plt.show()
 
 
 
-# %% [markdown] id="iTiuHrnczulJ"
+# %% [markdown]
 # ### **Conclusion**
 #
 # **The graph shows a relatively even distribution of earthquakes across the days of the month,which is what we would expect.**
 
-# %% id="trpPhztEbDgD"
+# %%
